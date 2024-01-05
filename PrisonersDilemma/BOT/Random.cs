@@ -3,16 +3,16 @@ using static PrisonersDilemma.ENUM.Enums;
 
 namespace PrisonersDilemma.BOT
 {
-    internal class Bot1 : IBot
+    internal class Random : IBot
     {
         public string Name()
         {
-            return "Dumb";
+            return "Random";
         }
         public Move MakeMove(IList<Move> moves)
         {
             return new Move {   BotName = Name(),
-                                Response = Response.Coorporate};
+                                Response = new System.Random().Next(0,2) == 0? Response.Coorporate : Response.Defect};
         }
     }
 }

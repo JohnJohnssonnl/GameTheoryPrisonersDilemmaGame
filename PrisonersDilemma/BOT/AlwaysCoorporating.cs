@@ -3,19 +3,16 @@ using static PrisonersDilemma.ENUM.Enums;
 
 namespace PrisonersDilemma.BOT
 {
-    internal class Bot2 : IBot
+    internal class AlwaysCoorporating : IBot
     {
         public string Name()
         {
-            return "Dumber";
+            return "Always Coorporating";
         }
         public Move MakeMove(IList<Move> moves)
         {
-            return new Move
-            {
-                BotName = Name(),
-                Response = Response.Defect
-            };
+            return new Move {   BotName = Name(),
+                                Response = Response.Coorporate};
         }
     }
 }
