@@ -8,12 +8,22 @@ namespace PrisonersDilemma.Src
         private     readonly IList<IBot> activeBots = new List<IBot>();
         public      IList<Game> Games = new List<Game>();
         public      IDictionary<string, int> ScoreList = new Dictionary<string, int>();
-        
+        string      docPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
         public void PlayTournament()
         {
             InitializeTournament();
 
-            foreach(Game game in Games)
+            string directory = Path.Combine(docPath, $"PrisonersDilemmaTournament");
+
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
+            
+            Directory.CreateDirectory(directory);
+
+            foreach (Game game in Games)
             {
                 game.PlayGame();
                 ScoreList.TryGetValue(game.Player1.Name(), out var currentCountPlayer1);
@@ -22,10 +32,17 @@ namespace PrisonersDilemma.Src
                 ScoreList[game.Player2.Name()] = currentCountPlayer2 + game.Player2Score;
             }
 
-            foreach(var bot in ScoreList)
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "PrisonersDilemmaTournament\\TournamentResults.csv"),false))
             {
-                Console.WriteLine($"Total score for bot {bot.Key} is {bot.Value}");
+                outputFile.WriteLine("Bot name; Score");
+
+                foreach (var bot in ScoreList)
+                {
+                    outputFile.WriteLine($"{bot.Key};{bot.Value}");
+                }
             }
+
+            Console.WriteLine("Tournament finished, results in CSV format can be found on the desktop in the PrisonersDillemmaTournament folder");
         }
 
         void InitializeTournament()
@@ -37,7 +54,7 @@ namespace PrisonersDilemma.Src
                     if(botOpponent.Name() != bot.Name())
                     {
                         //Each bot will be once a first and second player
-                        Games.Add(new Game(bot, botOpponent, 20));
+                        Games.Add(new Game(bot, botOpponent, 200));
                     }
                 }
             }
@@ -52,12 +69,14 @@ namespace PrisonersDilemma.Src
                    select t;
 
             using IEnumerator<Type> BotContender = bots.GetEnumerator();
+
+            Console.WriteLine("Building bot list to add to the tournament");
             while (BotContender.MoveNext())
             {
                 if (Activator.CreateInstance(BotContender.Current) is IBot currentBot)
                 {
                     activeBots.Add(currentBot);
-                    Console.WriteLine($"Added bot {currentBot.Name()}");
+                    Console.WriteLine($"Added bot to the tournament: {currentBot.Name()}");
                 }
             }
         }

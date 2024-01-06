@@ -9,7 +9,7 @@ namespace PrisonersDilemma.BOT
         {
             return "Always Defecting";
         }
-        public Move MakeMove(IList<Move> moves)
+        public Move MakeMove(IList<Move> moves, int round)
         {
             return new Move
             {

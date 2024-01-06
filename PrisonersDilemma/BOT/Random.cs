@@ -9,7 +9,7 @@ namespace PrisonersDilemma.BOT
         {
             return "Random";
         }
-        public Move MakeMove(IList<Move> moves)
+        public Move MakeMove(IList<Move> moves, int round)
         {
             return new Move {   BotName = Name(),
                                 Response = new System.Random().Next(0,2) == 0? Response.Coorporate : Response.Defect};

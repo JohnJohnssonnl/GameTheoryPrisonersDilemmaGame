@@ -10,6 +10,9 @@ namespace PrisonersDilemma.Src
         public IBot Player2 { get; set; }
         IList<Move> Moves { get; set; }
         int NumOfRounds { get; set; }
+        int CurrentRound { get; set; }
+        string docPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        StreamWriter outputFile;
 
         public Game(IBot player1, IBot player2, int numOfRounds)
         {
@@ -21,20 +24,24 @@ namespace PrisonersDilemma.Src
 
         public void PlayGame()
         {
-            for(int i = 1; i <= NumOfRounds; i++)
+            using (outputFile = new StreamWriter(Path.Combine(docPath, $"PrisonersDilemmaTournament\\{Player1.Name()},{Player2.Name()}.csv"), false))
             {
-                playRound();
-            }
+                outputFile.WriteLine("Bot name;Move;Points;Round");
 
-            Console.WriteLine($"{Player1.Name()} scored in this game {Player1Score} points");
-            Console.WriteLine($"{Player2.Name()} scored in this game {Player2Score} points");
+                for (CurrentRound = 1; CurrentRound <= NumOfRounds; CurrentRound++)
+                {
+                    playRound();
+                }
+            }
         }
 
         void playRound()
         {
             //We play in this way so player 2 has no idea of player 1's move so it has no strategical advantage
-            Move player1Move = Player1.MakeMove(Moves);
-            Move player2Move = Player2.MakeMove(Moves);
+            Move player1Move = Player1.MakeMove(Moves, CurrentRound);
+            Move player2Move = Player2.MakeMove(Moves, CurrentRound);
+            player1Move.Round = CurrentRound;
+            player2Move.Round = CurrentRound;
             player1Move.Points = evaluate(player1Move.Response, player2Move.Response);
             player2Move.Points = evaluate(player2Move.Response, player1Move.Response);
             Player1Score += player1Move.Points;
@@ -42,8 +49,8 @@ namespace PrisonersDilemma.Src
             Moves.Add(player1Move);
             Moves.Add(player2Move);
 
-            Console.WriteLine($"{Player1.Name()} move: {player1Move.Response}, scoring {player1Move.Points} points");
-            Console.WriteLine($"{Player2.Name()} move: {player2Move.Response}, scoring {player2Move.Points} points");
+            outputFile.WriteLine($"{Player1.Name()};{player1Move.Response};{player1Move.Points};{CurrentRound}");
+            outputFile.WriteLine($"{Player2.Name()};{player2Move.Response};{player2Move.Points};{CurrentRound}");
         }
 
         int evaluate(Response _response, Response _enemyResponse)

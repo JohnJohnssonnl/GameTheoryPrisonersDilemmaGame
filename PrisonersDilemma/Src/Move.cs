@@ -12,5 +12,7 @@ namespace PrisonersDilemma.Src
         public Response Response { get; set; }
         [DataMember]
         public int Points { get; set; }
+        [DataMember]
+        public int Round { get; set; }
     }
 }
