@@ -4,3 +4,9 @@ A bot can in a match choose to cooporate or defect and for each choise can get a
 
 You can create your own strategy by simply creating a bot in the BOT folder which implements IBot. You get a list with moves made previously in the game so you can adjust your strategy for your next move accordingly.
 
+TODO list (this is just a small section of what could be improved): 
+- Add more strategies (BOTS)
+- Refactor code, especially the game.cs is very messy, but it works for now
+- Make game rule variations and extendable so everyone can create their own easy rules for the game and see how that affects outcome
+- Implement "inperfections" affecting results
+- Implement more datacontracts with the data for full serialization in XML to get a game state and debug through from there
