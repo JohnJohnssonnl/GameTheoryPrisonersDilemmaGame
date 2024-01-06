@@ -62,9 +62,7 @@ namespace PrisonersDilemma.Src
 
         public Tournament()
         {
-            IEnumerable<Type> bots;
-
-            bots = from t in Assembly.GetExecutingAssembly().GetTypes()
+            var bots = from t in Assembly.GetExecutingAssembly().GetTypes()
                    where t.IsClass && t.Namespace == botsNameSpace
                    select t;
 
