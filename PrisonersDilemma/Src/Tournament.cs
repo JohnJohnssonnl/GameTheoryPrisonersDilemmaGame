@@ -4,11 +4,11 @@ namespace PrisonersDilemma.Src
 {
     internal class Tournament
     {
-        private     const string botsNameSpace = "PrisonersDilemma.BOT";
-        private     readonly IList<IBot> activeBots = new List<IBot>();
-        public      IList<Game> Games = new List<Game>();
-        public      IDictionary<string, int> ScoreList = new Dictionary<string, int>();
-        string      docPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private const string botsNameSpace = "PrisonersDilemma.BOT";
+        private readonly IList<IBot> activeBots = new List<IBot>();
+        public IList<Game> Games = new List<Game>();
+        public IDictionary<string, int> ScoreList = new Dictionary<string, int>();
+        private readonly string docPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
         public void PlayTournament()
         {
@@ -20,23 +20,23 @@ namespace PrisonersDilemma.Src
             {
                 Directory.Delete(directory, true);
             }
-            
-            Directory.CreateDirectory(directory);
+
+            _ = Directory.CreateDirectory(directory);
 
             foreach (Game game in Games)
             {
                 game.PlayGame();
-                ScoreList.TryGetValue(game.Player1.Name(), out var currentCountPlayer1);
+                _ = ScoreList.TryGetValue(game.Player1.Name(), out int currentCountPlayer1);
                 ScoreList[game.Player1.Name()] = currentCountPlayer1 + game.Player1Score;
-                ScoreList.TryGetValue(game.Player2.Name(), out var currentCountPlayer2);
+                _ = ScoreList.TryGetValue(game.Player2.Name(), out int currentCountPlayer2);
                 ScoreList[game.Player2.Name()] = currentCountPlayer2 + game.Player2Score;
             }
 
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "PrisonersDilemmaTournament\\TournamentResults.csv"),false))
+            using (StreamWriter outputFile = new(Path.Combine(docPath, "PrisonersDilemmaTournament\\TournamentResults.csv"), false))
             {
                 outputFile.WriteLine("Bot name; Score");
 
-                foreach (var bot in ScoreList)
+                foreach (KeyValuePair<string, int> bot in ScoreList)
                 {
                     outputFile.WriteLine($"{bot.Key};{bot.Value}");
                 }
@@ -45,13 +45,13 @@ namespace PrisonersDilemma.Src
             Console.WriteLine("Tournament finished, results in CSV format can be found on the desktop in the PrisonersDillemmaTournament folder");
         }
 
-        void InitializeTournament()
+        private void InitializeTournament()
         {
             foreach (IBot bot in activeBots)
             {
                 foreach (IBot botOpponent in activeBots)
                 {
-                    if(botOpponent.Name() != bot.Name())
+                    if (botOpponent.Name() != bot.Name())
                     {
                         //Each bot will be once a first and second player
                         Games.Add(new Game(bot, botOpponent, 200));

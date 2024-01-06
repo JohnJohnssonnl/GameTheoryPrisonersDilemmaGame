@@ -11,8 +11,11 @@ namespace PrisonersDilemma.BOT
         }
         public Move MakeMove(IList<Move> moves, int round)
         {
-            return new Move {   BotName = Name(),
-                                Response = Response.Coorporate};
+            return new Move
+            {
+                BotName = Name(),
+                Response = Response.Coorporate
+            };
         }
     }
 }

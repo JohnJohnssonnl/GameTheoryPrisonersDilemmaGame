@@ -4,7 +4,7 @@ using static PrisonersDilemma.ENUM.Enums;
 namespace PrisonersDilemma.Src
 {
     [DataContract]
-    class Move
+    internal class Move
     {
         [DataMember]
         public string? BotName { get; set; }

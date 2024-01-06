@@ -4,7 +4,7 @@
     {
         public enum Response
         {
-            Coorporate, 
+            Coorporate,
             Defect
         }
     }

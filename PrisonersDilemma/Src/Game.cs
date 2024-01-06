@@ -8,11 +8,12 @@ namespace PrisonersDilemma.Src
         public int Player2Score { get; set; }
         public IBot Player1 { get; set; }
         public IBot Player2 { get; set; }
-        IList<Move> Moves { get; set; }
-        int NumOfRounds { get; set; }
-        int CurrentRound { get; set; }
-        string docPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        StreamWriter outputFile;
+        private IList<Move> Moves { get; set; }
+        private int NumOfRounds { get; set; }
+        private int CurrentRound { get; set; }
+
+        private readonly string docPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private StreamWriter outputFile;
 
         public Game(IBot player1, IBot player2, int numOfRounds)
         {
@@ -35,7 +36,7 @@ namespace PrisonersDilemma.Src
             }
         }
 
-        void playRound()
+        private void playRound()
         {
             //We play in this way so player 2 has no idea of player 1's move so it has no strategical advantage
             Move player1Move = Player1.MakeMove(Moves, CurrentRound);
@@ -53,16 +54,14 @@ namespace PrisonersDilemma.Src
             outputFile.WriteLine($"{Player2.Name()};{player2Move.Response};{player2Move.Points};{CurrentRound}");
         }
 
-        int evaluate(Response _response, Response _enemyResponse)
+        private int evaluate(Response _response, Response _enemyResponse)
         {
-            switch(_response)
+            return _response switch
             {
-                case Response.Coorporate:
-                    return _enemyResponse == Response.Coorporate ? 3 : 0;
-                case Response.Defect:
-                    return _enemyResponse == Response.Defect ? 1 : 5;
-            }
-            return 0;
+                Response.Coorporate => _enemyResponse == Response.Coorporate ? 3 : 0,
+                Response.Defect => _enemyResponse == Response.Defect ? 1 : 5,
+                _ => 0,
+            };
         }
     }
 }
